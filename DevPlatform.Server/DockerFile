@@ -1,0 +1,32 @@
+# Используем базовый образ для .NET Core
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+WORKDIR /app
+EXPOSE 8080 8081
+
+# Копируем сертификаты
+COPY certs/DevPlatform.Server.pem /https/DevPlatform.Server.pem
+COPY certs/DevPlatform.Server.key /https/DevPlatform.Server.key
+
+# Используем базовый образ для сборки .NET Core приложения
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+
+# Копируем файл проекта
+COPY DevPlatform.Server.csproj ./
+
+# Выполняем команду dotnet restore для загрузки зависимостей
+RUN dotnet restore
+
+# Копируем остальные файлы, исключая bin и obj, и собираем приложение
+COPY . .
+RUN dotnet build -c Release -o /app/build
+
+# Публикуем приложение
+FROM build AS publish
+RUN dotnet publish -c Release -o /app/publish
+
+# Финальный образ для запуска приложения
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "DevPlatform.Server.dll"]
