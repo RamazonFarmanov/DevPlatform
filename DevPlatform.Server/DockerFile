@@ -1,11 +1,11 @@
 # Используем базовый образ для .NET Core
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-EXPOSE 8080 8081
+#EXPOSE 8080 8081
 
 # Копируем сертификаты
-COPY certs/DevPlatform.Server.pem /https/DevPlatform.Server.pem
-COPY certs/DevPlatform.Server.key /https/DevPlatform.Server.key
+#COPY certs/DevPlatform.Server.pem /https/DevPlatform.Server.pem
+#COPY certs/DevPlatform.Server.key /https/DevPlatform.Server.key
 
 # Используем базовый образ для сборки .NET Core приложения
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -29,4 +29,5 @@ RUN dotnet publish -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY certs /app/certs
 ENTRYPOINT ["dotnet", "DevPlatform.Server.dll"]
