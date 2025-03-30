@@ -1,44 +1,36 @@
 import * as React from 'react';
 import AppHeader from './AppHeader';
 import HomePage from './HomePage';
-import UsersPage from './UsersPage';
-import RolesPage from './RolesPage';
+import AdminPage from './AdminPage';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             homePage: true,
-            usersPage: false,
-            rolesPage: false
+            adminPage: false,
         }
         this.toHomePage = this.toHomePage.bind(this);
-        this.toUsersPage = this.toUsersPage.bind(this);
-        this.toRolesPage = this.toRolesPage.bind(this);
+        this.toAdminPage = this.toAdminPage.bind(this);
     }
     pageHandlers = {
         toHomePage: () => this.toHomePage(),
-        toUsersPage: () => this.toUsersPage(),
-        toRolesPage: () => this.toRolesPage(),
+        toAdminPage: () => this.toAdminPage(),
         toSignInPage: this.props.toSignIn,
         toSignUpPage: this.props.toSignUp
     };
     toHomePage(){
-        this.setState({homePage: true, usersPage: false, rolesPage: false});
+        this.setState({homePage: true, adminPage: false});
     }
-    toUsersPage(){
-        this.setState({homePage: false, usersPage: true, rolesPage: false});
-    }
-    toRolesPage(){
-        this.setState({homePage: false, usersPage: false, rolesPage: true});
+    toAdminPage(){
+        this.setState({homePage: false, adminPage: true})
     }
     render() {
         return (
             <div>
                 <AppHeader pageHandlers={this.pageHandlers}/>
                 {this.state.homePage && (<HomePage/>)}
-                {this.state.usersPage && (<UsersPage/>)}
-                {this.state.rolesPage && (<RolesPage/>)}
+                {this.state.adminPage && (<AdminPage/>)}
             </div>
         );
     }

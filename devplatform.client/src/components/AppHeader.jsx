@@ -8,6 +8,7 @@ class AppHeader extends React.Component {
             user: {}
 
         }
+        this.signOut = this.signOut.bind(this);
     }
     async componentDidMount() {
         const result = await fetch('api/authentication/getuser', { method: "GET" });
@@ -30,16 +31,13 @@ class AppHeader extends React.Component {
     render() {
         return (
             <header>
-                <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
                     <div className="container-fluid">
                         <a className="navbar-brand" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toHomePage, e)}>DevPlatform</a>
                         <div className="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                             <ul className="navbar-nav flex-grow-1">
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toUsersPage, e)}>Users</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link text-dark" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toRolesPage, e)}>Roles</a>
+                                    <a className="nav-link text-dark" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toAdminPage, e)}>Administration</a>
                                 </li>
                             </ul>
                         </div>
@@ -61,7 +59,7 @@ class AppHeader extends React.Component {
                             </button>)
                                 : (<div>
                                     <a className="btn me-1" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toSignInPage, e)}>Sign in</a>
-                                    <a className="btn btn-primary" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toSignInPage, e)}>Sign up</a>
+                                    <a className="btn btn-primary" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toSignUpPage, e)}>Sign up</a>
                                 </div>)}
                         </div>
                     </div>
@@ -80,19 +78,19 @@ class AppHeader extends React.Component {
                     <div className="offcanvas-body">
                         <ul className="list-unstyled">
                             <li>
-                                <button className="btn btn-light d-flex align-items-center gap-2 px-3 py-2 mb-1 shadow-sm" data-bs-dismiss="offcanvas" style={{ width: "100%", borderRadius: "8px", transition: "0.2s" }}>
+                                <button className="btn btn-light d-flex align-items-center px-3 py-2 mb-1" data-bs-dismiss="offcanvas" style={{ width: "100%", backgroundColor: "#ffffff", borderRadius: "8px", transition: "0.2s" }}>
                                     <i className="bi bi-box-arrow-right" style={{ fontSize: "1.2rem" }}></i>
                                     <span>Профиль</span>
                                 </button>
                             </li>
                             <li>
-                                <button className="btn btn-light d-flex align-items-center gap-2 px-3 py-2 mb-1 shadow-sm" data-bs-dismiss="offcanvas" style={{ width: "100%", borderRadius: "8px", transition: "0.2s" }}>
+                                <button className="btn btn-light d-flex align-items-center px-3 py-2 mb-1" data-bs-dismiss="offcanvas" style={{ width: "100%", backgroundColor: "#ffffff", borderRadius: "8px", transition: "0.2s" }}>
                                     <i className="bi bi-box-arrow-right" style={{ fontSize: "1.2rem" }}></i>
                                     <span>Настройки</span>
                                 </button>
                             </li>
                             <li>
-                                <button className="btn btn-light d-flex align-items-center gap-2 px-3 py-2 mb-1 shadow-sm" data-bs-dismiss="offcanvas" onClick={() => this.signOut()} style={{ width: "100%", borderRadius: "8px", transition: "0.2s" }}>
+                                <button className="btn btn-light d-flex align-items-center px-3 py-2 mb-1" data-bs-dismiss="offcanvas" onClick={this.signOut} style={{ width: "100%", backgroundColor: "#ffffff", borderRadius: "8px", transition: "0.2s" }}>
                                     <i className="bi bi-box-arrow-right" style={{ fontSize: "1.2rem" }}></i>
                                     <span>Выйти</span>
                                 </button>

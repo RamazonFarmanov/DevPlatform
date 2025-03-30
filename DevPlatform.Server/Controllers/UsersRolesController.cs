@@ -16,6 +16,52 @@ namespace DevPlatform.Server.Controllers
             this.userManager = userManager;
             this.roleManager = roleManager;
         }
+        [HttpGet("getroles")]
+        public IActionResult GetRoles()
+        {
+            List<RoleViewModel> roles = new List<RoleViewModel>();
+            foreach (var role in roleManager.Roles)
+            {
+                if(role != null)
+                {
+                    roles.Add(new RoleViewModel
+                    {
+                        Id = role.Id,
+                        Name = role.Name,
+                        IsChecked = false
+                    });
+                }
+            }
+            return Ok(roles);
+        }
+        [HttpPost("createrole")]
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleViewModel model)
+        {
+            if (ModelState.IsValid) 
+            {
+                await roleManager.CreateAsync(new IdentityRole(model.Name));
+                return Ok();
+            }
+            return BadRequest(ModelState);
+        }
+        [HttpPost("deleteroles")]
+        public async Task<IActionResult> DeleteRoles([FromBody] List<RoleViewModel> model)
+        {
+            if (model != null)
+            {
+                var toDelete = model.Where(u => u.IsChecked).ToList();
+                foreach (var role in toDelete) 
+                {
+                    var exists = await roleManager.FindByIdAsync(role.Id);
+                    if (exists != null) 
+                    {
+                        await roleManager.DeleteAsync(exists);
+                    }
+                }
+                return Ok();
+            }
+            return BadRequest();
+        }
         [HttpGet("getuser")]
         public async Task<IActionResult> UserGet()
         {

@@ -9,18 +9,18 @@ namespace DevPlatform.Server.ViewModels
         public string Email { get; set; }
 
         [Required]
-        [Display(Name = "Имя")]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Required]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
         [DataType(DataType.Password)]
-        [Display(Name = "Подтвердить пароль")]
+        [Display(Name = "Password Confirm")]
         public string PasswordConfirm { get; set; }
     }
 }
