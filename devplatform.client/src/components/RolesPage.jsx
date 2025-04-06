@@ -19,7 +19,7 @@ class RolesPage extends React.Component {
         this.getRoles();
     }
     async getRoles() {
-        const result = await fetch('api/usersroles/getroles', { method: "GET" });
+        const result = await fetch('/api/usersroles/getroles', { method: "GET" });
         if (result.ok) {
             var data = await result.json();
             this.setState({ roles: data });
@@ -47,7 +47,7 @@ class RolesPage extends React.Component {
     }
     async onCreate() {
         this.setState({ errors: {} });
-        const result = await fetch('api/usersroles/createrole', {
+        const result = await fetch('/api/usersroles/createrole', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name: this.state.name })
@@ -64,7 +64,7 @@ class RolesPage extends React.Component {
     }
     async onDelete() {
         this.setState({ errors: {} });
-        const result = await fetch('api/usersroles/deleteroles', {
+        const result = await fetch('/api/usersroles/deleteroles', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(this.state.roles)

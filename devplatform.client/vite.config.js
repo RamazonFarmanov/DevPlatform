@@ -10,7 +10,7 @@ const certPath = "certs/devplatform.client.pem";
 const keyPath = "certs/devplatform.client.key";
 
 if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
-    throw new Error("SSL сертификаты не найдены в контейнере!");
+    throw new Error("SSL пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
 }
 
 const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
@@ -26,7 +26,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/api': {
+            '/api': {
                 target,
                 secure: false
             }

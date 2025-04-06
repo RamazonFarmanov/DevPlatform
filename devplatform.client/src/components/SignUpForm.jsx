@@ -1,4 +1,6 @@
-import * as React from 'react'
+import * as React from 'react';
+import withRoute from '../withRoute';
+import { Link } from 'react-router-dom';
 
 class SignUpForm extends React.Component {
     constructor(props) {
@@ -22,14 +24,14 @@ class SignUpForm extends React.Component {
     }
     async handleSubmit(){
         this.setState({ errors: {} });
-        const response = await fetch('api/authentication/signup', {
+        const response = await fetch('/api/authentication/signup', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({ email: this.state.email, name: this.state.name, password: this.state.password, passwordConfirm: this.state.passConfirm})
         });
         if(response.ok){
-            this.props.toMain();
+            this.props.navigate("/");
         }
         if(response.status === 400){
             const errorData = response.json();
@@ -82,7 +84,7 @@ class SignUpForm extends React.Component {
                             </div>
                         </form>
                         <div className="text-center mt-3">
-                            <p className="mb-0">Already have an account? <a href="#" onClick={(e) => this.clickHandler(this.props.toSignIn, e)}>Sign in</a></p>
+                            <p className="mb-0">Already have an account? <Link to="/signIn">Sign in</Link></p>
                         </div>
                     </div>
                 </div>

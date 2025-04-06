@@ -1,42 +1,38 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './components/App.jsx';
-import SignInForm from './components/SignInForm.jsx';
-import SignUpForm from './components/SignUpForm.jsx';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import * as React from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import App from './components/App.jsx';
+import SignInForm from './components/SignInForm.jsx';
+import SignUpForm from './components/SignUpForm.jsx';
+import NotFound from './components/NotFound.jsx'
+import AdminPage from './components/AdminPage.jsx';
+import HomePage from './components/HomePage.jsx';
+import UsersPage from './components/UsersPage.jsx';
+import RolesPage from './components/RolesPage.jsx';
 
 class RootComponent extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            signUp: false,
-            signIn: false
-        }
-        this.toSignIn = this.toSignIn.bind(this);
-        this.toSignUp = this.toSignUp.bind(this);
-        this.toMain = this.toMain.bind(this);
-    }
-    toSignIn() {
-        this.setState({ signIn: true, signUp: false });
-    }
-    toSignUp() {
-        this.setState({ signUp: true, signIn: false });
-    }
-    toMain() {
-        this.setState({ signUp: false, signIn: false });
     }
     render() {
         return (
-            <StrictMode>
-                {
-                    this.state.signIn ? <SignInForm toSignUp={this.toSignUp} toMain={this.toMain} />
-                        : this.state.signUp ? <SignUpForm toSignIn={this.toSignIn} toMain={this.toMain} />
-                            : <App toSignIn={this.toSignIn} toSignUp={this.toSignUp} />
-                }
-            </StrictMode>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<App />}>
+                        <Route index element={<HomePage />}/>
+                        <Route path="admin" element={<AdminPage />}>
+                            <Route path="users" element={<UsersPage/>}/>
+                            <Route path="roles" element={<RolesPage />}/>
+                        </Route>
+                    </Route>
+                    <Route path="/signIn" element={<SignInForm />}/>
+                    <Route path="/signUp" element={<SignUpForm />}/>
+                    <Route path="*" element={<NotFound />}/>
+                </Routes>
+            </Router>
         );
     }
 }

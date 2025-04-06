@@ -1,5 +1,7 @@
-import * as React from 'react'
-import '../css/custom-bootstrap.css'
+import * as React from 'react';
+import withRoute from '../withRoute';
+import { Link } from 'react-router-dom';
+
 class SignInForm extends React.Component {
     constructor(props) {
         super(props);
@@ -20,14 +22,14 @@ class SignInForm extends React.Component {
     }
     async handleSubmit() {
         this.setState({ errors: {} });
-        const response = await fetch('api/authentication/signin', {
+        const response = await fetch('/api/authentication/signin', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
             body: JSON.stringify({ email: this.state.email, password: this.state.password, rememberMe: this.state.remember })
         });
         if (response.ok) {
-            this.props.toMain();
+            this.props.navigate("/");
         }
         else if (response.status === 400 || response.status === 401) {
             const errorData = await response.json();
@@ -76,7 +78,7 @@ class SignInForm extends React.Component {
                                 </form>
                             </div>
                             <div className="card-footer text-center">
-                                <p className="mb-0 me-1">Don't have an account? <a href="#" onClick={(e) => this.clickHandler(this.props.toSignUp, e)}>Sign up</a></p>
+                                <p className="mb-0 me-1">Don't have an account? <Link to="/signUp">Sign Up</Link></p>
                             </div>
                         </div>
                     </div>
@@ -85,4 +87,4 @@ class SignInForm extends React.Component {
         );
     }
 }
-export default SignInForm;
+export default withRoute(SignInForm);

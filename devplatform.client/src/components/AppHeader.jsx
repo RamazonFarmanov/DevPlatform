@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import withRoute from '../withRoute';
 import Avatar from './Avatar';
 
 class AppHeader extends React.Component {
@@ -11,7 +13,7 @@ class AppHeader extends React.Component {
         this.signOut = this.signOut.bind(this);
     }
     async componentDidMount() {
-        const result = await fetch('api/authentication/getuser', { method: "GET" });
+        const result = await fetch('/api/authentication/getuser', { method: "GET" });
         if (result.ok) {
             const data = await result.json();
             this.setState({ user: data });
@@ -19,7 +21,7 @@ class AppHeader extends React.Component {
         }
     }
     async signOut() {
-        const result = await fetch('api/authentication/signout', { method: "POST" });
+        const result = await fetch('/api/authentication/signout', { method: "POST" });
         if(result.ok){
             this.setState({ user: {} });
         }
@@ -33,11 +35,11 @@ class AppHeader extends React.Component {
             <header>
                 <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
                     <div className="container-fluid">
-                        <a className="navbar-brand" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toHomePage, e)}>DevPlatform</a>
+                        <Link className="navbar-brand" to="/">DevPlatform</Link>
                         <div className="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                             <ul className="navbar-nav flex-grow-1">
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toAdminPage, e)}>Administration</a>
+                                    <Link className="nav-link text-dark" to="/admin/users">Administration</Link>
                                 </li>
                             </ul>
                         </div>
@@ -58,8 +60,8 @@ class AppHeader extends React.Component {
                                 <Avatar name={this.state.user.name} photoUrl="" />
                             </button>)
                                 : (<div>
-                                    <a className="btn me-1" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toSignInPage, e)}>Sign in</a>
-                                    <a className="btn btn-primary" href="#" onClick={(e) => this.clickHandler(this.props.pageHandlers.toSignUpPage, e)}>Sign up</a>
+                                    <Link className="btn me-1" to="/signIn">Sign in</Link>
+                                    <Link className="btn btn-primary" to="signUp">Sign up</Link>
                                 </div>)}
                         </div>
                     </div>
@@ -103,4 +105,4 @@ class AppHeader extends React.Component {
     }
 }
 
-export default AppHeader;
+export default withRoute(AppHeader);

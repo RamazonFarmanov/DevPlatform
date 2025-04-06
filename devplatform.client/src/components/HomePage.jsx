@@ -1,4 +1,5 @@
-import * as React from 'react'
+import * as React from 'react';
+import withRoute from '../withRoute';
 
 class HomePage extends React.Component{
     constructor(props){
@@ -11,4 +12,4 @@ class HomePage extends React.Component{
     }
 }
 
-export default HomePage;
+export default withRoute(HomePage);
