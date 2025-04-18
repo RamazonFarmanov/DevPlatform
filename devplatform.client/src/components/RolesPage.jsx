@@ -23,15 +23,12 @@ class RolesPage extends React.Component {
         if (result.ok) {
             var data = await result.json();
             this.setState({ roles: data });
-            console.log(this.state.roles);
         }
     }
     onAllCheckChanged(e) {
-        this.setState(prevState => {
-            const updatedRoles = prevState.roles.map(role => ({ ...role, isChecked: e.target.checked }));
-            console.log("Updated roles: ", updatedRoles);
-            return { roles: updatedRoles };
-        });
+        this.setState(prevState => ({
+            roles: prevState.roles.map(role => ({ ...role, isChecked: e.target.checked }))
+        }));
     }
     onChekChanged(e, id) {
         this.setState(prevState => ({
@@ -75,7 +72,7 @@ class RolesPage extends React.Component {
     }
     render() {
         return (
-            <div style={{width: "800px"}}>
+            <div style={{width: "800px", margin: "20px"}}>
                 <form method="post" onSubmit={(e) => this.clickHandler(this.onCreate, e)}>
                     <table className="w-100">
                         <tr>

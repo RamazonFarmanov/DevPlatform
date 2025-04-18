@@ -12,6 +12,9 @@ import AdminPage from './components/AdminPage.jsx';
 import HomePage from './components/HomePage.jsx';
 import UsersPage from './components/UsersPage.jsx';
 import RolesPage from './components/RolesPage.jsx';
+import UserCreateForm from './components/UserCreateForm.jsx';
+import UserDetails from './components/UserDetails.jsx';
+import UserRoles from './components/UserRoles.jsx';
 
 class RootComponent extends React.Component {
     constructor(props) {
@@ -24,7 +27,11 @@ class RootComponent extends React.Component {
                     <Route path="/" element={<App />}>
                         <Route index element={<HomePage />}/>
                         <Route path="admin" element={<AdminPage />}>
-                            <Route path="users" element={<UsersPage/>}/>
+                            <Route path="users" element={<UsersPage/>}>
+                                <Route index element={<UserCreateForm/>}/>
+                                <Route path=":id/details" element={<UserDetails/>}/>
+                                <Route path=":id/roles" element={<UserRoles/>}/>
+                            </Route>
                             <Route path="roles" element={<RolesPage />}/>
                         </Route>
                     </Route>
