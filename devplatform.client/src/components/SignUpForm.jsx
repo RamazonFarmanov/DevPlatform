@@ -13,6 +13,7 @@ class SignUpForm extends React.Component {
             errors: {}
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.signIn = this.signIn.bind(this);
         this.onNameChanged = this.onNameChanged.bind(this);
         this.onEmailChanged = this.onEmailChanged.bind(this);
         this.onPasswordChanged = this.onPasswordChanged.bind(this);
@@ -24,32 +25,45 @@ class SignUpForm extends React.Component {
     }
     async handleSubmit(){
         this.setState({ errors: {} });
-        const response = await fetch('/api/authentication/signup', {
+        const response = await fetch('/api/authentication/createuser', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            credentials: "include",
             body: JSON.stringify({ email: this.state.email, name: this.state.name, password: this.state.password, passwordConfirm: this.state.passConfirm})
         });
         if(response.ok){
+            this.signIn();
+        }
+        else{
+            const data = await response.json();
+            console.log(data);
+        }
+    }
+    async signIn(){
+        const result = await fetch('/api/authentication/signin', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ email: this.state.email, password: this.state.password, rememberMe: true })
+        });
+        if(result.ok){
             this.props.navigate("/");
         }
-        if(response.status === 400){
-            const errorData = response.json();
-            console.log("Errors: ", errorData);
-            this.setState({ errors: errorData.errors });
+        else{
+            const data = await result.json();
+            console.log(data);
         }
     }
     onNameChanged(e){
         this.setState({ name: e.target.value });
     }
     onEmailChanged(e){
-        this.setState({ name: e.target.value });
+        this.setState({ email: e.target.value });
     }
     onPasswordChanged(e){
-        this.setState({ name: e.target.value });
+        this.setState({ password: e.target.value });
     }
     onPassConfirmChanged(e){
-        this.setState({ name: e.target.value });
+        this.setState({ passConfirm: e.target.value });
     }
     render() {
         return (
@@ -66,7 +80,7 @@ class SignUpForm extends React.Component {
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Email</label>
-                                <input value={this.state.name} onChange={this.onNameChanged} className="form-control" placeholder="Enter email" required />
+                                <input value={this.state.email} onChange={this.onEmailChanged} className="form-control" placeholder="Enter email" required />
                                 {this.state.errors.Email && (<div className="text-danger">{this.state.errors.Name.join(" ")}</div>)}
                             </div>
                             <div className="mb-3">
@@ -93,4 +107,4 @@ class SignUpForm extends React.Component {
     }
 }
 
-export default SignUpForm;
+export default withRoute(SignUpForm);

@@ -7,15 +7,21 @@ class UsersPage extends React.Component {
         super(props);
         this.state = {
             users: [],
-            messages: {}
+            messages: {},
+            isLargeScreen: document.documentElement.clientWidth >= 768
         }
         this.getUsers = this.getUsers.bind(this);
         this.deleteUsers = this.deleteUsers.bind(this);
         this.onAllCheckChanged = this.onAllCheckChanged.bind(this);
         this.onChekChanged = this.onCheckChanged.bind(this);
+        this.handleResize = this.handleResize.bind(this);
     }
     componentDidMount() {
+        window.addEventListener("resize", this.handleResize);
         this.getUsers();
+    }
+    componentWillUnmount() {
+        window.removeEventListener("resize", this.handleResize);
     }
     async getUsers() {
         const result = await fetch('/api/usersroles/getusers', { method: "GET" });
@@ -49,6 +55,9 @@ class UsersPage extends React.Component {
             users: prevState.users.map(user => user.userId === id ? { ...user, isChecked: e.target.checked } : user)
         }));
     }
+    handleResize() {
+        this.setState({ isLargeScreen: document.documentElement.clientWidth >= 768 });
+    }
     clickHandler(handler, e) {
         e.preventDefault();
         handler();
@@ -64,11 +73,13 @@ class UsersPage extends React.Component {
         return userRoles;
     }
     render() {
-        return (
-            <div style={{position: "relative"}}>
-                <div style={{ position: "absolute", width: "1000px", margin: "20px" }}>
+        const pathname = window.location.pathname;
+        const isFormOpen = pathname.endsWith("/createuser") || pathname.endsWith("/details") || pathname.endsWith("/roles");
+        const content = (
+            <div className="container-fluid d-flex">
+                <div style={{ width: "1250px", margin: "20px" }}>
                     <div style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between" }}>
-                        <Link to="/admin/users/" className="btn btn-primary">Create new user</Link>
+                        <Link to="/admin/users/createuser" className="btn btn-primary">Create new user</Link>
                         <a href="#" className="btn btn-danger" onClick={(e) => this.clickHandler(this.deleteUsers, e)}>Delete</a>
                     </div>
                     {this.state.messages.error && (<div className="text-danger">{this.state.messages.error}</div>)}
@@ -82,7 +93,7 @@ class UsersPage extends React.Component {
                                 <td>
                                     <div className="form-check d-flex align-items-center gap-2">
                                         <input className="form-check-input" type="checkbox" checked={this.state.users.every(user => user.isChecked)} onChange={this.onAllCheckChanged} />
-                                        
+
                                     </div>
                                 </td>
                             </tr>
@@ -102,11 +113,17 @@ class UsersPage extends React.Component {
                         </tbody>
                     </table>
                 </div>
-                <div style={{position: "absolute", left: "1040px"}}>
-                    <Outlet context={{ getUsers: this.getUsers }}/>
-                </div>
-            </div>
-        );
+                {isFormOpen && (
+                    <div className="border-start ps-3 ms-3">
+                        <Outlet context={{ getUsers: this.getUsers }} />
+                    </div>
+                )}
+            </div>);
+        if (!this.state.isLargeScreen) {
+            if (!isFormOpen) return content;
+            else return (<Outlet context={{ getUsers: this.getUsers }} />);
+        }
+        else return content;
     }
 }
 

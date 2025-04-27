@@ -2,28 +2,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import withRoute from '../withRoute';
 import Avatar from './Avatar';
+import MainMenu from './MainMenu';
 
 class AppHeader extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             user: {}
-
-        }
-        this.signOut = this.signOut.bind(this);
-    }
-    async componentDidMount() {
-        const result = await fetch('/api/authentication/getuser', { method: "GET" });
-        if (result.ok) {
-            const data = await result.json();
-            this.setState({ user: data });
-            console.log(data);
-        }
-    }
-    async signOut() {
-        const result = await fetch('/api/authentication/signout', { method: "POST" });
-        if(result.ok){
-            this.setState({ user: {} });
         }
     }
     clickHandler(handler, event) {
@@ -33,18 +18,34 @@ class AppHeader extends React.Component {
     render() {
         return (
             <header>
-                <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-                    <div className="container-fluid">
-                        <Link className="navbar-brand" to="/">DevPlatform</Link>
-                        <div className="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                            <ul className="navbar-nav flex-grow-1">
+                <nav className="navbar navbar-expand-md bg-light fixed-top shadow-sm border-bottom">
+                    <div className="container-fluid" style={{ height: "60px" }}>
+                        <button className=" btn me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainMenu" aria-controls="mainMenu">
+                            <span className=" navbar-toggler-icon"></span>
+                        </button>
+                        <div className="d-none d-md-flex">
+                            <ul className="navbar-nav fs-5">
                                 <li className="nav-item">
-                                    <Link className="nav-link text-dark" to="/admin/users">Administration</Link>
+                                    <Link className="nav-link text-dark me-5" to="/">Home</Link>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <a href="#" className="nav-link dropdown-toggle text-dark me-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
+                                    <ul className="dropdown-menu fs-5">
+                                        <li><Link className="dropdown-item" to="/myorders">All orders</Link></li>
+                                        <li><Link className="dropdown-item" to="/myorders">My orders</Link></li>
+                                    </ul>
+                                </li>
+                                <li className="nav-item dropdown">
+                                    <a href="#" className="nav-link dropdown-toggle text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administration</a>
+                                    <ul className="dropdown-menu fs-5">
+                                        <li><Link className="dropdown-item" to="/admin/users">Users</Link></li>
+                                        <li><Link className="dropdown-item" to="/admin/roles">Roles</Link></li>
+                                    </ul>
                                 </li>
                             </ul>
                         </div>
                         <div>
-                            {this.state.user.name ? (<button data-bs-toggle="offcanvas" data-bs-target="#profileMenu"
+                            {this.props.user? (<button onClick={(e) => this.clickHandler(() => this.props.navigate("/profile"), e)}
                                 style={{
                                     width: "50px",
                                     height: "50px",
@@ -57,7 +58,7 @@ class AppHeader extends React.Component {
                                     alignItems: "center",
                                     justifyContent: "center"
                                 }}>
-                                <Avatar name={this.state.user.name} photoUrl="" />
+                                <Avatar user={this.props.user} photoUrl="" />
                             </button>)
                                 : (<div>
                                     <Link className="btn me-1" to="/signIn">Sign in</Link>
@@ -66,40 +67,7 @@ class AppHeader extends React.Component {
                         </div>
                     </div>
                 </nav>
-                <div
-                    className="offcanvas offcanvas-end"
-                    tabIndex="-1"
-                    id="profileMenu"
-                    aria-labelledby="profileMenuLabel"
-                >
-                    <div className="offcanvas-header">
-                        <div style={{ width: "50px", height: "50px", marginRight: "20px" }}><Avatar name={this.state.user.name} photoUrl="" /></div>
-                        <h5 className="offcanvas-title" id="profileMenuLabel">{this.state.user.name}</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="offcanvas"></button>
-                    </div>
-                    <div className="offcanvas-body">
-                        <ul className="list-unstyled">
-                            <li>
-                                <button className="btn btn-light d-flex align-items-center px-3 py-2 mb-1" data-bs-dismiss="offcanvas" style={{ width: "100%", backgroundColor: "#ffffff", borderRadius: "8px", transition: "0.2s" }}>
-                                    <i className="bi bi-box-arrow-right" style={{ fontSize: "1.2rem" }}></i>
-                                    <span>Профиль</span>
-                                </button>
-                            </li>
-                            <li>
-                                <button className="btn btn-light d-flex align-items-center px-3 py-2 mb-1" data-bs-dismiss="offcanvas" style={{ width: "100%", backgroundColor: "#ffffff", borderRadius: "8px", transition: "0.2s" }}>
-                                    <i className="bi bi-box-arrow-right" style={{ fontSize: "1.2rem" }}></i>
-                                    <span>Настройки</span>
-                                </button>
-                            </li>
-                            <li>
-                                <button className="btn btn-light d-flex align-items-center px-3 py-2 mb-1" data-bs-dismiss="offcanvas" onClick={this.signOut} style={{ width: "100%", backgroundColor: "#ffffff", borderRadius: "8px", transition: "0.2s" }}>
-                                    <i className="bi bi-box-arrow-right" style={{ fontSize: "1.2rem" }}></i>
-                                    <span>Выйти</span>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <MainMenu signOut={this.props.signOut} />
             </header>
         );
     }

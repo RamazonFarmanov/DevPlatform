@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using DevPlatform.Server.Services;
 using DevPlatform.Server.ViewModels;
+using DevPlatform.Server.Data.Models;
 
 namespace DevPlatform.Server.Controllers
 {
@@ -9,9 +11,9 @@ namespace DevPlatform.Server.Controllers
     [ApiController]
     public class AuthenticationController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> signInManager;
-        public AuthenticationController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        private readonly AppUserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
+        public AuthenticationController(AppUserManager<User> userManager, SignInManager<User> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -32,7 +34,7 @@ namespace DevPlatform.Server.Controllers
 
             return Ok(new { message = "Вход выполнен успешно" });
         }
-        [HttpPost("signup")]
+        [HttpPost("createuser")]
         public async Task<IActionResult> SignUp([FromBody] SignUpViewModel model)
         {
             if (!ModelState.IsValid)
@@ -40,15 +42,14 @@ namespace DevPlatform.Server.Controllers
 
             var existingUser = await userManager.FindByEmailAsync(model.Email);
             if (existingUser != null)
-                return BadRequest(new { message = "Этот email уже используется" });
+                return BadRequest(new { error = new { Email = "This email is already used" } });
 
-            var user = new IdentityUser { Email = model.Email, UserName = model.Name };
+            var user = new User { Email = model.Email, UserName = model.Name };
             var result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(new { error = "Error ocured during user creation" });
 
-            await signInManager.SignInAsync(user, false); // Устанавливаем куки
-            return Ok(new { message = "Регистрация успешна" });
+            return Ok(new { message = "User has been created successfully!" });
         }
         [HttpPost("signout")]
         public async Task<IActionResult> SignOut()
@@ -64,14 +65,19 @@ namespace DevPlatform.Server.Controllers
                 return Unauthorized(new { message = "Пользователь не авторизован" });
 
             var _user = await userManager.FindByNameAsync(User.Identity.Name);
-            UserRoleViewModel user = new UserRoleViewModel { UserId = "smth", Email = "smth", Name = "smth" };
             if (_user != null)
             {
-                user.UserId = _user.Id;
-                user.Email = _user.Email;
-                user.Name = _user.UserName;
+                var user = new UserRoleViewModel
+                {
+                    UserId = _user.Id,
+                    Email = _user.Email,
+                    Name = _user.UserName,
+                    AvatarUrl = _user.AvatarUrl,
+                    UserRoles = await userManager.GetRolesAsync(_user),
+                };
+                return Ok(user);
             }
-            return Ok(user);
+            return NotFound(new { error = "User not found!" });
         }
     }
 }

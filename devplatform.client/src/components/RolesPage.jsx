@@ -72,35 +72,37 @@ class RolesPage extends React.Component {
     }
     render() {
         return (
-            <div style={{width: "800px", margin: "20px"}}>
-                <form method="post" onSubmit={(e) => this.clickHandler(this.onCreate, e)}>
-                    <table className="w-100">
-                        <tr>
-                            <td className="w-50"><input type="text" className="form-control" placeholder="Name" value={this.state.name} onChange={this.onNameChanged} /></td>
-                            <td className="w-25"><button type="submit" className="btn btn-primary w-100">Add role</button></td>
-                            <td className="w-25"><button className="btn btn-danger w-100" onClick={(e) => this.clickHandler(this.onDelete, e)}>Delete</button></td>
-                        </tr>
+            <div className="container-fluid d-flex justify-content-center">
+                <div style={{ width: "800px", margin: "20px" }}>
+                    <form method="post" onSubmit={(e) => this.clickHandler(this.onCreate, e)}>
+                        <table className="w-100">
+                            <tr>
+                                <td className="w-50"><input type="text" className="form-control" placeholder="Name" value={this.state.name} onChange={this.onNameChanged} /></td>
+                                <td className="w-25"><button type="submit" className="btn btn-primary w-100">Add role</button></td>
+                                <td className="w-25"><button className="btn btn-danger w-100" onClick={(e) => this.clickHandler(this.onDelete, e)}>Delete</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                    {this.state.errors.Name && (<div className="text-danger">{this.state.errors.Name.join(" ")}</div>)}
+                    <table className="table table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <td className="w-75"><p><strong>Role name</strong></p></td>
+                                <td className="w-25"><p><input className="form-check-input" type="checkbox" checked={this.state.roles.every(role => role.isChecked)} onChange={this.onAllCheckChanged} /> <strong>Select all</strong></p></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.roles.map(element => (
+                                    <tr key={element.id}>
+                                        <td className="w-75">{element.name}</td>
+                                        <td className="w-25"><input type="checkbox" className="form-check-input" checked={element.isChecked} onChange={(e) => { this.onChekChanged(e, element.id) }} /></td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
                     </table>
-                </form>
-                {this.state.errors.Name && (<div className="text-danger">{this.state.errors.Name.join(" ")}</div>)}
-                <table className="table table-bordered mt-3">
-                    <thead>
-                        <tr>
-                            <td className="w-75"><p><strong>Role name</strong></p></td>
-                            <td className="w-25"><p><input className="form-check-input" type="checkbox" checked={this.state.roles.every(role => role.isChecked)} onChange={this.onAllCheckChanged} /> <strong>Select all</strong></p></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            this.state.roles.map(element => (
-                                <tr key={element.id}>
-                                    <td className="w-75">{element.name}</td>
-                                    <td className="w-25"><input type="checkbox" className="form-check-input" checked={element.isChecked} onChange={(e) => { this.onChekChanged(e, element.id) }} /></td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </table>
+                </div>
             </div>
         );
     }

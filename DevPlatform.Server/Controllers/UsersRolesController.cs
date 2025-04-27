@@ -1,7 +1,9 @@
-﻿using DevPlatform.Server.ViewModels;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using DevPlatform.Server.Services;
+using DevPlatform.Server.Data.Models;
+using DevPlatform.Server.ViewModels;
 
 namespace DevPlatform.Server.Controllers
 {
@@ -9,9 +11,9 @@ namespace DevPlatform.Server.Controllers
     [ApiController]
     public class UsersRolesController : Controller
     {
-        private UserManager<IdentityUser> userManager;
+        private AppUserManager<User> userManager;
         private RoleManager<IdentityRole> roleManager;
-        public UsersRolesController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UsersRolesController(AppUserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
@@ -91,6 +93,7 @@ namespace DevPlatform.Server.Controllers
                         UserId = user.Id,
                         Name = user.UserName,
                         Email = user.Email,
+                        AvatarUrl = user.AvatarUrl,
                         IsChecked = false,
                         AllRoles = roleManager.Roles.ToList(),
                         UserRoles = roles
@@ -111,29 +114,12 @@ namespace DevPlatform.Server.Controllers
                     UserId = _user.Id,
                     Name = _user.UserName,
                     Email = _user.Email,
+                    AvatarUrl = _user.AvatarUrl,
                     IsChecked = false,
                     UserRoles = roles
                 });
             }
             return NotFound(new { message = "User not found!" });
-        }
-        [HttpPost("createuser")]
-        public async Task<IActionResult> CreateUser([FromBody] SignUpViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var _user = await userManager.FindByEmailAsync(model.Email);
-            if (_user != null)
-                return BadRequest(new { error = new { Email = "This email is already used" } });
-            IdentityUser user = new IdentityUser
-            {
-                Email = model.Email,
-                UserName = model.Name
-            };
-            var result = await userManager.CreateAsync(user);
-            if (result.Succeeded)
-                return Ok(new { message = "User has been created successfully!" });
-            return BadRequest(new { message = "Error ocured during user creation" });
         }
         [HttpPost("edituser")]
         public async Task<IActionResult> EditUser([FromBody] EditUserViewModel model)
@@ -181,8 +167,8 @@ namespace DevPlatform.Server.Controllers
             var user = await userManager.FindByIdAsync(model.UserId);
             if (user != null)
             {
-                var passwordValidator = HttpContext.RequestServices.GetService(typeof(IPasswordValidator<IdentityUser>)) as IPasswordValidator<IdentityUser>;
-                var passwordHasher = HttpContext.RequestServices.GetService(typeof(IPasswordHasher<IdentityUser>)) as IPasswordHasher<IdentityUser>;
+                var passwordValidator = HttpContext.RequestServices.GetService(typeof(IPasswordValidator<User>)) as IPasswordValidator<User>;
+                var passwordHasher = HttpContext.RequestServices.GetService(typeof(IPasswordHasher<User>)) as IPasswordHasher<User>;
                 var result = await passwordValidator.ValidateAsync(userManager, user, model.Password);
                 if (result.Succeeded)
                 {

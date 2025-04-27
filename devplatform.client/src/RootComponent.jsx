@@ -10,11 +10,13 @@ import SignUpForm from './components/SignUpForm.jsx';
 import NotFound from './components/NotFound.jsx'
 import AdminPage from './components/AdminPage.jsx';
 import HomePage from './components/HomePage.jsx';
+import OrdersPage from './components/OrdersPage.jsx';
 import UsersPage from './components/UsersPage.jsx';
 import RolesPage from './components/RolesPage.jsx';
 import UserCreateForm from './components/UserCreateForm.jsx';
 import UserDetails from './components/UserDetails.jsx';
 import UserRoles from './components/UserRoles.jsx';
+import ProfilePage from './components/ProfilePage.jsx';
 
 class RootComponent extends React.Component {
     constructor(props) {
@@ -26,14 +28,16 @@ class RootComponent extends React.Component {
                 <Routes>
                     <Route path="/" element={<App />}>
                         <Route index element={<HomePage />}/>
+                        <Route path="myorders" element={<OrdersPage/>}/>
                         <Route path="admin" element={<AdminPage />}>
                             <Route path="users" element={<UsersPage/>}>
-                                <Route index element={<UserCreateForm/>}/>
+                                <Route path="createuser" element={<UserCreateForm/>}/>
                                 <Route path=":id/details" element={<UserDetails/>}/>
                                 <Route path=":id/roles" element={<UserRoles/>}/>
                             </Route>
                             <Route path="roles" element={<RolesPage />}/>
                         </Route>
+                        <Route path="profile" element={<ProfilePage/>}/>
                     </Route>
                     <Route path="/signIn" element={<SignInForm />}/>
                     <Route path="/signUp" element={<SignUpForm />}/>

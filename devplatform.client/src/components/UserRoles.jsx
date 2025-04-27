@@ -63,7 +63,7 @@ class UserRoles extends React.Component {
     }
     render() {
         return (
-            <div style={{ background: "#ffffff", width: "400px", padding: "20px", height: "100vh", borderLeft: "1px solid #dee2e6" }}>
+            <div style={{ background: "#ffffff", width: "400px", padding: "20px", height: "100vh" }}>
                 <h2>{this.props.location?.state?.element?.email} roles</h2>
                 {this.state.messages.message && (<div className="text-success">{this.state.messages.message}</div>)}
                 {this.state.messages.error && (<div className="text-danger">{this.state.messages.error}</div>)}

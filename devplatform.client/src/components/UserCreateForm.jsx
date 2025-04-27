@@ -20,7 +20,7 @@ class UserCreateForm extends React.Component {
         handler();
     }
     async handleSubmit() {
-        const result = await fetch('/api/usersroles/createuser', {
+        const result = await fetch('/api/authentication/createuser', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({email: this.state.email, name: this.state.name, password: this.state.password, passwordConfirm: this.state.password})
@@ -42,7 +42,7 @@ class UserCreateForm extends React.Component {
     }
     render() {
         return (
-            <div style={{ width: "600px", background: "#ffffff", borderLeft: "1px solid #dee2e6", height: "100vh", padding: "20px" }}>
+            <div style={{ width: "500px", background: "#ffffff", height: "100vh", padding: "20px" }}>
                 <h2>User creation</h2>
                 {this.state.messages.message && (<div className="text-success">{this.state.messages.message}</div>)}
                 {this.state.messages.error && (<div className="text-danger">{this.state.messages.error.email}</div>)}

@@ -1,4 +1,6 @@
 using DevPlatform.Server.Data;
+using DevPlatform.Server.Data.Models;
+using DevPlatform.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +15,8 @@ builder.WebHost.ConfigureKestrel(options =>
     options.ListenAnyIP(7228, listenOptions => listenOptions.UseHttps());
 });
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
+builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
+builder.Services.AddAppUserManager();
 
 //Cookies configuration
 builder.Services.ConfigureApplicationCookie(options =>
@@ -27,7 +30,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.HttpOnly = true; // Защита от XSS
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Работает только по HTTPS
     options.Cookie.SameSite = SameSiteMode.None; // Нужно для CORS, если фронт на другом домене
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(1440);
     options.SlidingExpiration = true;
 });
 
@@ -51,6 +54,7 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+app.UseStaticFiles();
 app.UseCors("AllowReactApp");
 app.UseDefaultFiles();
 app.MapStaticAssets();
