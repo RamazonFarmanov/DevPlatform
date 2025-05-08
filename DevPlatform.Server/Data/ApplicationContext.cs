@@ -8,7 +8,8 @@ namespace DevPlatform.Server.Data
     public class ApplicationContext : IdentityDbContext<User>
     {
         public DbSet<Order> Orders { get; set; }
-        public DbSet<Candidate> Candidates { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<OrderSkill> OrederSkills { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -16,8 +17,12 @@ namespace DevPlatform.Server.Data
 
             // Добавление уникального индекса на Email
             builder.Entity<User>()
-                   .HasIndex(u => u.Email)
-                   .IsUnique();
+                .HasIndex(u => u.Email)
+                .IsUnique();
+            builder.Entity<Skill>()
+                .HasAlternateKey(s => s.Name);
+            builder.Entity<OrderSkill>()
+                .HasNoKey();
         }
     }
 }

@@ -4,15 +4,29 @@ namespace DevPlatform.Server.Services
 {
     public class AppResult<T>
     {
-        public IdentityResult Result { get; set; }
+        public static AppResult<T> success = new AppResult<T> { Succeeded = true };
+        public List<IdentityError> errors = new List<IdentityError>();
+        public bool Succeeded { get; set; }
         public T? Payload { get; set; }
-
-        public bool Succeeded => Result.Succeeded;
-
+        public IEnumerable<IdentityError> Errors => errors;
+        public static AppResult<T> Success()
+        {
+            var result = new AppResult<T> { Succeeded = true };
+            return result;
+        }
         public static AppResult<T> Success(T payload)
-            => new() { Result = IdentityResult.Success, Payload = payload };
-
+        {
+            var result = new AppResult<T> { Succeeded = true, Payload = payload };
+            return result;
+        }
         public static AppResult<T> Failure(params IdentityError[] errors)
-            => new() { Result = IdentityResult.Failed(errors), Payload = default };
+        {
+            var result = new AppResult<T> { Succeeded = false };
+            if (errors != null)
+            {
+                result.errors.AddRange(errors);
+            }
+            return result;
+        }
     }
 }

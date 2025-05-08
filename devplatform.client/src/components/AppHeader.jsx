@@ -31,8 +31,8 @@ class AppHeader extends React.Component {
                                 <li className="nav-item dropdown">
                                     <a href="#" className="nav-link dropdown-toggle text-dark me-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
                                     <ul className="dropdown-menu fs-5">
-                                        <li><Link className="dropdown-item" to="/myorders">All orders</Link></li>
-                                        <li><Link className="dropdown-item" to="/myorders">My orders</Link></li>
+                                        <li><Link className="dropdown-item" to="/orders/myorders">All orders</Link></li>
+                                        <li><Link className="dropdown-item" to="/orders/myorders">My orders</Link></li>
                                     </ul>
                                 </li>
                                 <li className="nav-item dropdown">

@@ -19,7 +19,7 @@ namespace DevPlatform.Server.Controllers
             userManager = _userManager;
         }
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadAvatarId([FromForm] IFormFile file)
+        public async Task<IActionResult> UploadAvatarAuth([FromForm] IFormFile file)
         {
             var user = await userManager.GetUserAsync(User);
             if (user == null) return NotFound();
@@ -35,7 +35,7 @@ namespace DevPlatform.Server.Controllers
             return BadRequest(result.Errors);
         }
         [HttpPost("uploadbyid")]
-        public async Task<IActionResult> UploadAvatarAuth([FromForm] IFormFile file, [FromForm] string userId)
+        public async Task<IActionResult> UploadAvatarId([FromForm] IFormFile file, [FromForm] string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user == null) return NotFound();

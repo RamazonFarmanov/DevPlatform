@@ -3,10 +3,15 @@ using DevPlatform.Server.Data.Models;
 using DevPlatform.Server.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+                .AddJsonOptions(options =>
+                 {
+                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                 });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.WebHost.ConfigureKestrel(options =>
@@ -17,6 +22,8 @@ builder.WebHost.ConfigureKestrel(options =>
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationContext>();
 builder.Services.AddAppUserManager();
+builder.Services.AddOrderManager();
+builder.Services.AddSkillManager();
 
 //Cookies configuration
 builder.Services.ConfigureApplicationCookie(options =>

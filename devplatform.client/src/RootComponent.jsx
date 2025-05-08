@@ -17,6 +17,8 @@ import UserCreateForm from './components/UserCreateForm.jsx';
 import UserDetails from './components/UserDetails.jsx';
 import UserRoles from './components/UserRoles.jsx';
 import ProfilePage from './components/ProfilePage.jsx';
+import OrderEditor from './components/OrderEditor.jsx';
+import MyOrdersList from './components/MyOrdersList.jsx';
 
 class RootComponent extends React.Component {
     constructor(props) {
@@ -28,7 +30,10 @@ class RootComponent extends React.Component {
                 <Routes>
                     <Route path="/" element={<App />}>
                         <Route index element={<HomePage />}/>
-                        <Route path="myorders" element={<OrdersPage/>}/>
+                        <Route path="orders" element={<OrdersPage/>}>
+                            <Route path="myorders" element={<MyOrdersList/>}/>
+                            <Route path="createorder" element={<OrderEditor/>}/>
+                        </Route>
                         <Route path="admin" element={<AdminPage />}>
                             <Route path="users" element={<UsersPage/>}>
                                 <Route path="createuser" element={<UserCreateForm/>}/>

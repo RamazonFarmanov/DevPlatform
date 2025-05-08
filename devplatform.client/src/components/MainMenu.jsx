@@ -8,7 +8,6 @@ class MainMenu extends React.Component {
     }
     clickHandeler(handler, e) {
         e.preventDefault();
-        // this.closeOffcanvas();
         handler();
     }
     closeOffcanvas() {
@@ -40,7 +39,22 @@ class MainMenu extends React.Component {
                             <hr />
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link ms-3" to="/myorders" onClick={this.closeOffcanvas}>My orders</Link>
+                            <button
+                                className="btn nav-link ms-3 fs-5 w-100 text-start"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#ordersCollapse"
+                                aria-expanded="false"
+                                aria-controls="adminCollapse"
+                            >
+                                Orders
+                            </button>
+                            <div className="collapse" id="ordersCollapse">
+                                <ul className="list-unstyled ms-4">
+                                    <li><Link to="/orders/myorders" className="nav-link mt-3" onClick={this.closeOffcanvas}>All orders</Link></li>
+                                    <li><Link to="/orders/myorders" className="nav-link mt-3" onClick={this.closeOffcanvas}>My orders</Link></li>
+                                </ul>
+                            </div>
                         </li>
                         <li>
                             <hr />

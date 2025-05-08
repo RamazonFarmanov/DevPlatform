@@ -1,5 +1,6 @@
 import * as React from 'react';
 import withRoute from '../withRoute';
+import { Outlet } from 'react-router-dom';
 
 class OrdersPage extends React.Component {
     constructor(props) {
@@ -7,9 +8,7 @@ class OrdersPage extends React.Component {
     }
     render() {
         return (
-            <div className="container d-flex justify-content-center">
-                <h1>Orders Page</h1>
-            </div>
+            <Outlet/>
         );
     }
 }
